@@ -4,7 +4,6 @@ import "./Canvas.css";
 
 function Canvas(props) {
   const [canvas, setCanvas] = useState("");
-
   const [file, setFile] = useState(null);
 
   const initCanvas = () =>
@@ -19,6 +18,20 @@ function Canvas(props) {
   useEffect(() => {
     let canvas = initCanvas();
     setCanvas(canvas);
+
+    ///ZOOMING
+    canvas.on("mouse:wheel", function (opt) {
+      let delta = opt.e.deltaY;
+      let zoom = canvas.getZoom();
+      zoom *= 0.999 ** delta;
+
+      if (zoom > 20) zoom = 20;
+      if (zoom < 1) zoom = 1;
+      canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+
+      opt.e.preventDefault();
+      opt.e.stopPropagation();
+    });
 
     // destroy fabric on unmount
     return () => {
@@ -39,24 +52,11 @@ function Canvas(props) {
       img.scaleToHeight(canvas.height);
       img.scaleToWidth(canvas.width);
 
-      ///ZOOMING
-      canvas.on("mouse:wheel", function (opt) {
-        let delta = opt.e.deltaY;
-        let zoom = canvas.getZoom();
-        zoom *= 0.999 ** delta;
-
-        if (zoom > 20) zoom = 20;
-        if (zoom < 1) zoom = 1;
-        canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-
-        opt.e.preventDefault();
-        opt.e.stopPropagation();
-      });
-
       canvas.add(img);
       canvas.renderAll();
     });
   };
+
   const onImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {

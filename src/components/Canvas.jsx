@@ -41,16 +41,17 @@ function Canvas(props) {
 
       ///ZOOMING
       canvas.on("mouse:wheel", function (opt) {
-        var delta = opt.e.deltaY;
-        var zoom = canvas.getZoom();
+        let delta = opt.e.deltaY;
+        let zoom = canvas.getZoom();
         zoom *= 0.999 ** delta;
+        console.log(zoom);
 
         if (zoom > 20) zoom = 20;
         if (zoom < 1) zoom = 1;
         canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
         opt.e.preventDefault();
         opt.e.stopPropagation();
-        var vpt = this.viewportTransform;
+        let vpt = this.viewportTransform;
         if (zoom < 400 / 1000) {
           vpt[4] = 200 - (1000 * zoom) / 2;
           vpt[5] = 200 - (1000 * zoom) / 2;

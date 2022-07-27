@@ -1,5 +1,3 @@
-import logo from "./logo.svg";
-import "./App.css";
 import Canvas from "../src/components/Canvas";
 
 function App() {
